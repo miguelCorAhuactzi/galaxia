@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Puerta del Amor ❤️</title>
+<style>
+    body {
+        margin: 0;
+        overflow: hidden;
+        font-family: 'Segoe Script', cursive;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+
+        /* Fondo degradado animado */
+        background: linear-gradient(-45deg,
+            #ff9a3c,
+            #8c1f3f,
+            #ffcc70,
+            #a83279);
+        background-size: 400% 400%;
+        animation: gradient 12s ease infinite;
+    }
+
+    /* Animación del fondo */
+    @keyframes gradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* Contenedor */
+    .container {
+        text-align: center;
+        padding: 40px;
+        background: rgba(255, 240, 230, 0.15);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        box-shadow: 0 0 20px rgba(255, 200, 180, 0.5);
+        animation: float 3s ease-in-out infinite;
+    }
+
+    /* Animación de flotación */
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+    }
+
+    h1 {
+        font-size: 32px;
+        color: #ffe6d9;
+        text-shadow: 0 0 6px rgba(255,255,255,0.8);
+        margin-bottom: 20px;
+    }
+
+    input {
+        padding: 12px 20px;
+        width: 260px;
+        border: none;
+        border-radius: 15px;
+        outline: none;
+        font-size: 18px;
+        background: rgba(255,255,255,0.8);
+    }
+
+    button {
+        margin-top: 20px;
+        padding: 12px 25px;
+        font-size: 18px;
+        border: none;
+        border-radius: 20px;
+        color: white;
+        background: linear-gradient(45deg, #ff7a18, #af002d);
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba(255,200,200,0.5);
+        transition: transform 0.2s;
+    }
+
+    button:hover {
+        transform: scale(1.1);
+    }
+
+    /* Luciérnagas */
+    .sparkle {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        background: rgba(255,255,180,0.9);
+        border-radius: 50%;
+        animation: sparkleMove 6s infinite ease-in-out;
+    }
+
+    @keyframes sparkleMove {
+        from { transform: translateY(0) translateX(0); opacity: 0.7; }
+        to { transform: translateY(-200px) translateX(50px); opacity: 0; }
+    }
+</style>
+</head>
+<body>
+
+<!-- Luciérnagas generadas -->
+<script>
+    for(let i = 0; i < 40; i++){
+        let s = document.createElement("div");
+        s.classList.add("sparkle");
+        s.style.left = Math.random()*100 + "vw";
+        s.style.top = Math.random()*100 + "vh";
+        s.style.animationDuration = (4 + Math.random()*4) + "s";
+        document.body.appendChild(s);
+    }
+</script>
+
+<div class="container">
+    <h1>Introduce la contraseña de nuestro amor ❤️</h1>
+    <input id="passwordInput" type="password" placeholder="Escribe aquí...">
+    <br>
+    <button onclick="checkPassword()">Entrar 💖</button>
+    <p id="msg" style="color:#ffe6e6; margin-top:15px;"></p>
+</div>
+
+<script>
+function checkPassword() {
+    const inputPass = document.getElementById("passwordInput").value;
+    const msg = document.getElementById("msg");
+
+    fetch("password.json")
+        .then(response => response.json())
+        .then(data => {
+            if (inputPass === data.password) {
+                msg.style.color = "#baffc9";
+                msg.innerText = "Bienvenida mi amor... ❤️✨";
+
+                setTimeout(() => {
+                    window.location.href = "final.html"; // siguiente fase
+                }, 1500);
+
+            } else {
+                msg.style.color = "#ffd1d1";
+                msg.innerText = "Esa no es nuestra contraseña... 💔";
+            }
+        });
+}
+</script>
+
+</body>
+</html>

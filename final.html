@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Nuestra Historia — Galaxia, Reino y Camino</title>
+<style>
+  :root{--accent:#ff6b8a;--gold:#ffd166}
+  
+  /* Estilos generales */
+  body{margin:0;overflow:hidden;font-family:'Segoe UI',system-ui,sans-serif;background:#000;color:white;}
+  
+  /* Navegación superior */
+  #uiTop{position:absolute;top:16px;left:0;right:0;text-align:center;z-index:30;pointer-events:none;}
+  #title{font-family:'Segoe Script',cursive;font-size:26px;color:var(--gold);text-shadow:0 0 8px #fff;pointer-events:auto;}
+  #navBtns{position:absolute;top:16px;right:16px;z-index:40;display:flex;gap:10px;}
+  .navBtn{pointer-events:auto;background:linear-gradient(45deg,#ffb347,#ff416c);border:none;color:white;padding:8px 16px;border-radius:12px;cursor:pointer;box-shadow:0 6px 18px rgba(255,70,120,0.15);transition:transform 0.2s;}
+  .navBtn:hover{transform:scale(1.05);}
+  
+  /* Controles específicos de escena 4 */
+  #flowerBtn{position:absolute;inset:0;margin:auto;width:150px;height:150px;border-radius:50%;border:none;
+    background:radial-gradient(circle,pink,crimson);color:#fff;font-size:22px;box-shadow:0 0 30px pink;cursor:pointer;z-index:40;
+    animation:pulse 2000ms infinite;display:none;}
+  @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
+  
+  #textBox{position:absolute;bottom:110px;width:100%;text-align:center;font-size:26px;color:#fff;text-shadow:0 0 10px #000;display:none;z-index:40;}
+  
+  #finalBox{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;align-items:center;color:#fff;font-size:38px;text-shadow:0 0 15px #000;z-index:50;}
+  
+  #fotoMiriam{width:260px;height:260px;object-fit:cover;border-radius:20px;box-shadow:0 0 25px rgba(255,200,200,0.8);margin-bottom:10px;}
+  
+  #resetBtn{margin-top:20px;padding:12px 30px;border-radius:20px;border:none;background:crimson;color:#fff;cursor:pointer;font-size:18px;box-shadow:0 0 12px rgba(0,0,0,0.3);}
+  
+  /* Burbuja musical */
+  #bubble{position:fixed;left:28px;bottom:28px;width:64px;height:64px;border-radius:50%;
+    background:radial-gradient(circle at top,#ffd1dc,#ff4f81);box-shadow:0 8px 30px rgba(255,80,160,0.5);z-index:55;display:flex;align-items:center;justify-content:center;font-weight:bold;cursor:pointer;}
+  
+  /* Modal musical */
+  #modal{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:80;}
+  #modalCard{background:linear-gradient(135deg,#ff7eb3,#ff758c);padding:18px;border-radius:16px;color:#fff;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.6);}
+  .modalBtn{margin:6px;padding:8px 12px;border-radius:10px;border:none;cursor:pointer;}
+  
+  /* Mensajes flotantes */
+  #messageBox{position:fixed;left:50%;transform:translateX(-50%);bottom:90px;z-index:50;pointer-events:none;font-size:18px;color:#fff;background:rgba(0,0,0,0.45);padding:10px 16px;border-radius:12px;display:none;}
+  
+  /* Ayudas de escena */
+  #sceneHint{position:absolute;left:16px;bottom:16px;color:#fff;z-index:60;text-shadow:0 0 6px #000;}
+  
+  /* Botón para lago */
+  #lakeNextBtn{position:fixed;left:50%;transform:translateX(-50%);bottom:40px;z-index:90;}
+    #finalIntro{
+  font-size:32px;
+  margin-bottom:20px;
+  text-align:center;
+}
+
+#giftBtn{
+  padding:14px 30px;
+  font-size:22px;
+  border-radius:25px;
+  border:none;
+  background:crimson;
+  color:#fff;
+  cursor:pointer;
+  box-shadow:0 0 20px rgba(255,0,80,0.6);
+  animation:pulse 2s infinite;
+}
+
+#finalContent{
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  gap:18px;
+  margin-top:20px;
+}
+
+#finalVideo{
+  width:320px;
+  max-width:90%;
+  border-radius:16px;
+  box-shadow:0 0 20px rgba(0,0,0,0.5);
+}
+
+#youtubeBtn{
+  text-decoration:none;
+  background:#ff0000;
+  color:white;
+  padding:12px 22px;
+  border-radius:20px;
+  font-size:18px;
+  box-shadow:0 0 12px rgba(0,0,0,0.4);
+}
+
+#comingSoon{
+  font-size:20px;
+  opacity:0.9;
+}
+
+#heart{
+  font-size:48px;
+  animation:heartbeat 1.4s infinite;
+}
+
+@keyframes heartbeat{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.25)}
+  100%{transform:scale(1)}
+}
+#finalLove, #finalGift{
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  gap:18px;
+}
+
+#toGiftBtn{
+  margin-top:18px;
+  padding:12px 26px;
+  font-size:18px;
+  border-radius:20px;
+  border:none;
+  background:#ff6b8a;
+  color:white;
+  cursor:pointer;
+  box-shadow:0 0 14px rgba(255,0,80,0.4);
+}
+
+</style>
+</head>
+<body>
+
+<!-- Navegación superior -->
+<div id="uiTop">
+  <div id="title">Nuestra Historia ❤️ — <span id="sceneLabel">Galaxia</span></div>
+</div>
+
+<div id="navBtns">
+  <button class="navBtn" id="toGalaxy">Galaxia</button>
+  <button class="navBtn" id="toReino">Reino</button>
+  <button class="navBtn" id="toCamino">Camino</button>
+</div>
+
+<!-- Elementos específicos de escena 4 (Camino) -->
+<button id="flowerBtn">🌸</button>
+<div id="textBox"></div>
+<div id="finalBox">
+
+  <!-- FASE 1: Mensaje final -->
+  <div id="finalLove">
+    <img id="fotoMiriam" src="fotos/amor.jpg" alt="Foto especial" />
+    <div style="margin-top:15px">Te quiero Miriam ❤️</div>
+    <button id="toGiftBtn">Aún hay algo más…</button>
+  </div>
+
+  <!-- FASE 2: Regalo final -->
+  <div id="finalGift">
+    <div id="finalIntro">Aún hay una última cosa que quiero darte…</div>
+
+    <button id="giftBtn">Presióname 💝</button>
+
+    <div id="finalContent">
+      <video id="finalVideo" controls>
+        <source src="video/video.mp4" type="video/mp4">
+      </video>
+
+      <a id="youtubeBtn"
+         href="https://www.youtube.com/@zefeoficial6798"
+         target="_blank">
+         Ir a mi canal de YouTube ▶️
+      </a>
+
+      <div id="comingSoon">Próximamente para ti</div>
+      <div id="heart">❤️</div>
+
+      <button id="resetBtn">Volver a la Galaxia</button>
+    </div>
+  </div>
+
+</div>
+
+<div id="sceneHint"></div>
+
+<!-- Burbuja y control musical -->
+<div id="bubble" title="Abrir música">♪</div>
+<div id="modal">
+  <div id="modalCard">
+    <h3>🎵 Nuestra música</h3>
+    <div>
+      <button class="modalBtn" onclick="playMusic()">▶️ Play</button>
+      <button class="modalBtn" onclick="pauseMusic()">⏸️ Pausa</button>
+      <button class="modalBtn" onclick="nextTrack()">⏭️ Siguiente</button>
+    </div>
+    <div style="margin-top:10px">Volumen <input type="range" min="0" max="1" step="0.01" value="0.6" id="volRange"></div>
+    <div style="margin-top:10px;text-align:right"><button class="modalBtn" onclick="closeModal()">Cerrar</button></div>
+  </div>
+</div>
+
+<!-- Mensajes flotantes -->
+<div id="messageBox"></div>
+
+
+<!-- Three.js -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
+<script>
+/* ============================================
+   CONFIGURACIÓN GLOBAL
+   ============================================ */
+const ESCENAS = {
+  GALAXIA: 'galaxia',
+  REINO: 'reino',
+  CAMINO: 'camino'
+};
+
+let escenaActual = ESCENAS.GALAXIA;
+let currentThreeScene = null;
+let sceneObjects = {};
+let interactionLocked = false;
+
+/* ============================================
+   MÚSICA PERSISTENTE
+   ============================================ */
+const PLAYLIST = ["musica/musica1.mp3", "musica/musica2.mp3", "musica/cancion3.mp3", "musica/cancion4.mp3"];
+let _trackIndex = Number(localStorage.getItem("mi_track_index") || 0);
+let _savedTime = Number(localStorage.getItem("mi_track_time") || 0);
+
+if (!window.bgMusic) {
+  window.bgMusic = new Audio(PLAYLIST[_trackIndex]);
+  window.bgMusic.loop = false;
+  window.bgMusic.volume = Number(localStorage.getItem("mi_vol") ?? 0.6);
+  window.bgMusic.currentTime = _savedTime;
+  
+  window.bgMusic.addEventListener("ended", () => {
+    _trackIndex = (_trackIndex + 1) % PLAYLIST.length;
+    window.bgMusic.src = PLAYLIST[_trackIndex];
+    window.bgMusic.play();
+    localStorage.setItem("mi_track_index", _trackIndex);
+  });
+  
+  window.bgMusic.addEventListener("timeupdate", () => {
+    localStorage.setItem("mi_track_time", window.bgMusic.currentTime);
+  });
+}
+
+/* Control musical */
+const bubble = document.getElementById("bubble");
+const modal = document.getElementById("modal");
+const volRange = document.getElementById("volRange");
+
+volRange.value = window.bgMusic.volume;
+volRange.oninput = (e) => {
+  window.bgMusic.volume = Number(e.target.value);
+  localStorage.setItem("mi_vol", window.bgMusic.volume);
+};
+
+bubble.onclick = () => modal.style.display = "flex";
+function closeModal() { modal.style.display = "none"; }
+function playMusic() { window.bgMusic.play(); }
+function pauseMusic() { window.bgMusic.pause(); }
+function nextTrack() {
+  _trackIndex = (_trackIndex + 1) % PLAYLIST.length;
+  window.bgMusic.src = PLAYLIST[_trackIndex];
+  window.bgMusic.play();
+  localStorage.setItem("mi_track_index", _trackIndex);
+}
+
+/* Activación inicial de música */
+document.body.addEventListener("pointerdown", () => {
+  if (window.bgMusic && window.bgMusic.paused) {
+    try { window.bgMusic.play(); } catch(e) {}
+  }
+}, { once: true });
+
+/* ============================================
+   THREE.JS SETUP
+   ============================================ */
+let renderer, camera, clock, raycaster, pointer, mouse;
+
+function initThree() {
+  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  document.body.appendChild(renderer.domElement);
+  
+  camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 3000);
+  camera.position.set(0, 0, 80);
+  
+  clock = new THREE.Clock();
+  raycaster = new THREE.Raycaster();
+  pointer = new THREE.Vector2();
+  mouse = { x: 0, y: 0 };
+  
+  // Control de mouse para rotación de cámara
+  window.addEventListener("mousemove", (e) => {
+    mouse.x = (e.clientX / window.innerWidth - 0.5) * 2;
+    mouse.y = (e.clientY / window.innerHeight - 0.5) * 2;
+  });
+}
+
+/* ============================================
+   UTILIDADES
+   ============================================ */
+function disposeScene(scene) {
+  if (!scene) return;
+  scene.traverse(obj => {
+    if (obj.geometry) obj.geometry.dispose();
+    if (obj.material) {
+      if (Array.isArray(obj.material)) {
+        obj.material.forEach(m => m.dispose());
+      } else {
+        obj.material.dispose();
+      }
+    }
+    if (obj.texture) obj.texture.dispose?.();
+  });
+}
+
+let msgTimer = null;
+function showMessage(text, ms = 3500) {
+  const mb = document.getElementById("messageBox");
+  mb.innerText = text;
+  mb.style.display = "block";
+  if (msgTimer) clearTimeout(msgTimer);
+  msgTimer = setTimeout(() => { mb.style.display = "none"; }, ms);
+}
+
+/* ============================================
+   ESCENA 1: GALAXIA
+   ============================================ */
+function mountGalaxy() {
+  escenaActual = ESCENAS.GALAXIA;
+  document.getElementById("sceneLabel").innerText = "Galaxia";
+  document.getElementById("flowerBtn").style.display = "none";
+  document.getElementById("finalBox").style.display = "none";
+  document.getElementById("sceneHint").innerText = "Explora las fotos flotantes";
+  
+  disposeScene(currentThreeScene);
+  currentThreeScene = new THREE.Scene();
+  currentThreeScene.background = new THREE.Color(0x000000);
+  sceneObjects = { stars: null, photos: [] };
+  
+  // Estrellas
+  const starGeo = new THREE.BufferGeometry();
+  const starCount = 2500;
+  const positions = new Float32Array(starCount * 3);
+  for (let i = 0; i < starCount; i++) {
+    positions[i * 3] = (Math.random() - 0.5) * 1200;
+    positions[i * 3 + 1] = (Math.random() - 0.5) * 1200;
+    positions[i * 3 + 2] = (Math.random() - 0.5) * 1200;
+  }
+  starGeo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+  const starMat = new THREE.PointsMaterial({ size: 0.8, color: 0xffffff });
+  sceneObjects.stars = new THREE.Points(starGeo, starMat);
+  currentThreeScene.add(sceneObjects.stars);
+  
+  // Fotos
+  const fotoUrls = ["fotos/foto1.jpg", "fotos/foto2.jpg", "fotos/foto3.jpg", "fotos/amor.jpg"];
+  const loader = new THREE.TextureLoader();
+  fotoUrls.forEach((url, idx) => {
+    loader.load(url, (tex) => {
+      const mat = new THREE.MeshBasicMaterial({ map: tex, side: THREE.DoubleSide });
+      const geo = new THREE.PlaneGeometry(16, 12);
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.position.set(
+        (Math.random() - 0.5) * 240,
+        (Math.random() - 0.5) * 160,
+        (Math.random() - 0.5) * 240
+      );
+      mesh.rotation.set(Math.random() * 0.3 - 0.15, Math.random() * Math.PI, 0);
+      currentThreeScene.add(mesh);
+      sceneObjects.photos.push(mesh);
+    });
+  });
+  
+  currentThreeScene.add(new THREE.AmbientLight(0x888888, 0.6));
+  camera.position.set(0, 0, 80);
+}
+
+/* ============================================
+   ESCENA 2: REINO
+   ============================================ */
+function mountReino() {
+  escenaActual = ESCENAS.REINO;
+  document.getElementById("sceneLabel").innerText = "Reino Mágico";
+  document.getElementById("flowerBtn").style.display = "none";
+  document.getElementById("finalBox").style.display = "none";
+  document.getElementById("sceneHint").innerText = "Haz clic en Sol, Luna o Mundo";
+  
+  disposeScene(currentThreeScene);
+  currentThreeScene = new THREE.Scene();
+  currentThreeScene.background = new THREE.Color(0x051024);
+  sceneObjects = { sun: null, moon: null, earth: null, fishGroup: null, lakePlane: null };
+  
+  // Iluminación
+  currentThreeScene.add(new THREE.AmbientLight(0xffffff, 0.45));
+  const dirLight = new THREE.DirectionalLight(0xffffff, 0.5);
+  dirLight.position.set(5, 10, 7);
+  currentThreeScene.add(dirLight);
+  
+  // Sol
+  const sunGeo = new THREE.SphereGeometry(10, 48, 32);
+  const sunMat = new THREE.MeshStandardMaterial({ 
+    emissive: 0xffb347, 
+    emissiveIntensity: 1, 
+    color: 0xff8c42, 
+    roughness: 0.3, 
+    metalness: 0.1 
+  });
+  const sun = new THREE.Mesh(sunGeo, sunMat);
+  sun.position.set(-28, 10, -40);
+  sun.userData.type = "sun";
+  currentThreeScene.add(sun);
+  sceneObjects.sun = sun;
+  
+  // Luna
+  const moonGeo = new THREE.SphereGeometry(6, 32, 24);
+  const moonMat = new THREE.MeshStandardMaterial({ color: 0xdfe6ea, roughness: 0.9 });
+  const moon = new THREE.Mesh(moonGeo, moonMat);
+  moon.position.set(28, 12, -30);
+  moon.userData.type = "moon";
+  currentThreeScene.add(moon);
+  sceneObjects.moon = moon;
+  
+  // Tierra
+  const earthGeo = new THREE.SphereGeometry(9, 48, 32);
+  const earthMat = new THREE.MeshStandardMaterial({ color: 0x2a6f97, roughness: 0.7 });
+  const earth = new THREE.Mesh(earthGeo, earthMat);
+  earth.position.set(0, -8, -20);
+  earth.userData.type = "earth";
+  currentThreeScene.add(earth);
+  sceneObjects.earth = earth;
+  
+  // Nube orbital
+  const cloudGeo = new THREE.TorusGeometry(12, 0.6, 16, 64);
+  const cloudMat = new THREE.MeshStandardMaterial({ 
+    color: 0xffffff, 
+    opacity: 0.08, 
+    transparent: true 
+  });
+  const cloud = new THREE.Mesh(cloudGeo, cloudMat);
+  cloud.position.copy(earth.position);
+  currentThreeScene.add(cloud);
+  
+  // Lago (oculto inicialmente)
+  const lakeGeo = new THREE.CircleGeometry(12, 64);
+  const lakeMat = new THREE.MeshBasicMaterial({ 
+    color: 0x084b7a, 
+    side: THREE.DoubleSide 
+  });
+  const lake = new THREE.Mesh(lakeGeo, lakeMat);
+  lake.rotation.x = -Math.PI / 2;
+  lake.position.set(0, -9.5, -18);
+  lake.visible = false;
+  currentThreeScene.add(lake);
+  sceneObjects.lakePlane = lake;
+  
+  // Peces (ocultos inicialmente)
+  const fishGroup = new THREE.Group();
+  for (let i = 0; i < 8; i++) {
+    const fishGeo = new THREE.SphereGeometry(0.6, 8, 8);
+    const fishMat = new THREE.MeshStandardMaterial({ 
+      color: (i % 2 ? 0xffdd57 : 0xff6b6b) 
+    });
+    const fish = new THREE.Mesh(fishGeo, fishMat);
+    fish.position.set(
+      Math.cos(i) * 4 + (Math.random() - 0.5),
+      -9.2 + Math.random() * 0.6,
+      -18 + Math.random() * 1
+    );
+    fish.userData.phase = Math.random() * Math.PI * 2;
+    fishGroup.add(fish);
+  }
+  fishGroup.visible = false;
+  currentThreeScene.add(fishGroup);
+  sceneObjects.fishGroup = fishGroup;
+  
+  camera.position.set(0, 0, 80);
+}
+
+/* ============================================
+   ESCENA 3: CAMINO
+   ============================================ */
+function mountCamino() {
+  escenaActual = ESCENAS.CAMINO;
+  document.getElementById("sceneLabel").innerText = "Camino y Maizales";
+  document.getElementById("flowerBtn").style.display = "block";
+  document.getElementById("sceneHint").innerText = "Haz clic en la flor para continuar";
+  document.getElementById("finalBox").style.display = "none";
+  
+  disposeScene(currentThreeScene);
+  currentThreeScene = new THREE.Scene();
+  sceneObjects = { 
+    ground: null, 
+    road: null, 
+    maizeLeft: null, 
+    maizeRight: null,
+    girl: null, 
+    boy: null 
+  };
+  
+  // Fondo gradiente (simulado)
+  currentThreeScene.background = new THREE.Color(0xf7c873);
+  
+  // Luces
+  const dirLight = new THREE.DirectionalLight(0xffe7b2, 1.1);
+  dirLight.position.set(30, 40, 10);
+  currentThreeScene.add(dirLight);
+  currentThreeScene.add(new THREE.AmbientLight(0xffffff, 0.35));
+  const hemi = new THREE.HemisphereLight(0xfff3d9, 0x444444, 0.25);
+  currentThreeScene.add(hemi);
+  
+  // Suelo
+  const loader = new THREE.TextureLoader();
+  const groundTex = loader.load("fotos/ground.jpg", tex => {
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+    tex.repeat.set(8, 8);
+  });
+  
+  const ground = new THREE.Mesh(
+    new THREE.PlaneGeometry(500, 500),
+    new THREE.MeshStandardMaterial({ map: groundTex })
+  );
+  ground.rotation.x = -Math.PI / 2;
+  ground.position.y = -0.01;
+  currentThreeScene.add(ground);
+  sceneObjects.ground = ground;
+  
+  // Camino
+  const roadTex = loader.load("fotos/tierra.jpg", tex => {
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+    tex.repeat.set(1, 8);
+  });
+  
+  const road = new THREE.Mesh(
+    new THREE.PlaneGeometry(12, 220, 8, 8),
+    new THREE.MeshStandardMaterial({ map: roadTex })
+  );
+  road.rotation.x = -Math.PI / 2;
+  road.position.z = -90;
+  currentThreeScene.add(road);
+  sceneObjects.road = road;
+  
+  // Maizales izquierda
+  sceneObjects.maizeLeft = new THREE.Group();
+  for (let i = 0; i < 60; i++) {
+    sceneObjects.maizeLeft.add(createCorn(-9, -i * 1.6));
+  }
+  currentThreeScene.add(sceneObjects.maizeLeft);
+  
+  // Maizales derecha
+  sceneObjects.maizeRight = new THREE.Group();
+  for (let i = 0; i < 60; i++) {
+    sceneObjects.maizeRight.add(createCorn(9, -i * 1.6 + (Math.random() * 0.4)));
+  }
+  currentThreeScene.add(sceneObjects.maizeRight);
+  
+  // Personajes
+  sceneObjects.girl = createCharacter({ 
+    shirtColor: 0x7a2f7a, 
+    torsoHeight: 2.6, 
+    legHeight: 2.8, 
+    x: -2.6, 
+    hat: true 
+  });
+  sceneObjects.boy = createCharacter({ 
+    shirtColor: 0x1a1a1a, 
+    torsoHeight: 3.1, 
+    legHeight: 3.2, 
+    x: 2.6, 
+    hat: true 
+  });
+  
+  currentThreeScene.add(sceneObjects.girl);
+  currentThreeScene.add(sceneObjects.boy);
+  
+  // Posición de cámara para esta escena
+  camera.position.set(0, 6, 24);
+  camera.lookAt(0, 2, 0);
+  
+  // Configurar interacción de la flor
+  const flowerBtn = document.getElementById("flowerBtn");
+  const textBox = document.getElementById("textBox");
+  const finalBox = document.getElementById("finalBox");
+  const resetBtn = document.getElementById("resetBtn");
+  
+  flowerBtn.onclick = () => {
+    flowerBtn.style.display = 'none';
+    document.getElementById("sceneHint").style.display = 'none';
+    textBox.style.display = 'block';
+    textBox.innerText = "Quisiera revivir nuestro primer beso...";
+    setTimeout(() => startKissSequence(), 1200);
+  };
+  
+const finalLove = document.getElementById("finalLove");
+const finalGift = document.getElementById("finalGift");
+const toGiftBtn = document.getElementById("toGiftBtn");
+const giftBtn = document.getElementById("giftBtn");
+const finalContent = document.getElementById("finalContent");
+
+toGiftBtn.onclick = () => {
+  finalLove.style.display = "none";
+  finalGift.style.display = "flex";
+};
+
+giftBtn.onclick = () => {
+  giftBtn.style.display = "none";
+  finalContent.style.display = "flex";
+};
+
+resetBtn.onclick = () => {
+ mountGalaxy();
+};
+}
+
+/* ============================================
+   FUNCIONES AUXILIARES PARA ESCENA CAMINO
+   ============================================ */
+function createCorn(x, z) {
+  const g = new THREE.Group();
+  
+  const stemMat = new THREE.MeshStandardMaterial({ color: 0x2e8b57, roughness: 0.8 });
+  const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.18, 4.6, 8), stemMat);
+  stem.position.y = 2.3;
+  g.add(stem);
+  
+  const cornMat = new THREE.MeshStandardMaterial({ color: 0xf1c40f, roughness: 0.6 });
+  const corn = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.28, 1.4, 10), cornMat);
+  corn.position.set(0.5, 2.6, 0);
+  corn.rotation.z = Math.PI / 2.8;
+  g.add(corn);
+  
+  for (let i = 0; i < 3; i++) {
+    const leafGeom = new THREE.PlaneGeometry(1.6, 3.0, 6, 6);
+    const pos = leafGeom.attributes.position;
+    for (let v = 0; v < pos.count; v++) {
+      const vy = pos.getY(v);
+      const vx = pos.getX(v);
+      pos.setX(v, vx + Math.sin(vy * 0.7 + Math.random() * 0.6) * 0.03);
+      pos.setZ(v, (Math.cos(vy * 0.6) + 1) * 0.03);
+    }
+    pos.needsUpdate = true;
+    const leaf = new THREE.Mesh(
+      leafGeom,
+      new THREE.MeshStandardMaterial({ 
+        color: 0x2aa05a, 
+        side: THREE.DoubleSide, 
+        roughness: 0.9 
+      })
+    );
+    leaf.position.y = 2 - i * 0.3;
+    leaf.rotation.y = Math.random() * Math.PI;
+    leaf.rotation.z = -0.3 + Math.random() * 0.6;
+    leaf.scale.x = 0.9 + Math.random() * 0.4;
+    g.add(leaf);
+  }
+  
+  g.position.set(x + (Math.random() - 0.5) * 0.6, 0, z + (Math.random() - 0.5) * 0.6);
+  g.userData.baseZ = g.position.z;
+  return g;
+}
+
+function createCharacter(options) {
+  const { shirtColor = 0x000000, torsoHeight = 2.6, legHeight = 2.4, x = 0, hat = true } = options;
+  const root = new THREE.Group();
+  
+  const pelvis = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.7, 0.8, 0.6, 12),
+    new THREE.MeshStandardMaterial({ color: 0x8b5a3c })
+  );
+  pelvis.position.y = 0.6;
+  root.add(pelvis);
+  
+  const torso = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.9, 1.1, torsoHeight, 16),
+    new THREE.MeshStandardMaterial({ color: shirtColor })
+  );
+  torso.position.y = pelvis.position.y + 0.5 + torsoHeight / 2 - 0.3;
+  root.add(torso);
+  
+  const neck = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.18, 0.18, 0.3, 12),
+    new THREE.MeshStandardMaterial({ color: 0xffdbac })
+  );
+  neck.position.y = torso.position.y + torsoHeight / 2 + 0.15;
+  root.add(neck);
+  
+  const head = new THREE.Mesh(
+    new THREE.SphereGeometry(0.6, 20, 20),
+    new THREE.MeshStandardMaterial({ color: 0xffdbac })
+  );
+  head.position.y = neck.position.y + 0.5;
+  root.add(head);
+  
+  const legMat = new THREE.MeshStandardMaterial({ color: 0x2e2e2e });
+  const leftLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.35, legHeight, 12), legMat);
+  const rightLeg = leftLeg.clone();
+  leftLeg.position.set(-0.28, 0.6 - legHeight / 2 + 0.2, 0);
+  rightLeg.position.set(0.28, 0.6 - legHeight / 2 + 0.2, 0);
+  root.add(leftLeg);
+  root.add(rightLeg);
+  
+  const upperArmGeom = new THREE.CylinderGeometry(0.18, 0.2, torsoHeight * 0.6, 10);
+  const foreArmGeom = new THREE.CylinderGeometry(0.16, 0.16, torsoHeight * 0.55, 10);
+  const armMat = new THREE.MeshStandardMaterial({ color: shirtColor });
+  
+  const leftUpper = new THREE.Mesh(upperArmGeom, armMat);
+  leftUpper.position.set(-1.05, torso.position.y + torsoHeight * 0.12, 0);
+  leftUpper.rotation.z = Math.PI / 6;
+  root.add(leftUpper);
+  
+  const leftFore = new THREE.Mesh(foreArmGeom, armMat);
+  leftFore.position.set(-1.55, torso.position.y - 0.05, 0);
+  leftFore.rotation.z = Math.PI / 4;
+  root.add(leftFore);
+  
+  const rightUpper = leftUpper.clone();
+  const rightFore = leftFore.clone();
+  rightUpper.position.x = 1.05;
+  rightUpper.rotation.z = -Math.PI / 6;
+  rightFore.position.x = 1.55;
+  rightFore.rotation.z = -Math.PI / 4;
+  root.add(rightUpper);
+  root.add(rightFore);
+  
+  const handMat = new THREE.MeshStandardMaterial({ color: 0xffdbac });
+  const lh = new THREE.Mesh(new THREE.SphereGeometry(0.14, 10, 10), handMat);
+  const rh = lh.clone();
+  lh.position.set(-1.85, torso.position.y - 0.25, 0);
+  rh.position.set(1.85, torso.position.y - 0.25, 0);
+  root.add(lh);
+  root.add(rh);
+  
+  const vest = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.95, 1.05, torsoHeight, 12),
+    new THREE.MeshStandardMaterial({ 
+      color: 0xefe6d1, 
+      transparent: true, 
+      opacity: 0.95 
+    })
+  );
+  vest.position.y = torso.position.y;
+  vest.scale.x = 0.98;
+  vest.scale.z = 0.98;
+  root.add(vest);
+  
+  if (hat) {
+    const brim = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.95, 0.95, 0.08, 18),
+      new THREE.MeshStandardMaterial({ color: 0xefe6d1 })
+    );
+    brim.position.y = head.position.y + 0.75;
+    
+    const crown = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.45, 0.45, 0.9, 12),
+      new THREE.MeshStandardMaterial({ color: 0xefe6d1 })
+    );
+    crown.position.y = head.position.y + 1.1;
+    
+    root.add(brim);
+    root.add(crown);
+  }
+  
+  root.position.set(x, 0, -20);
+  root.userData = {
+    leftUpper, leftFore, rightUpper, rightFore,
+    lh, rh, torso, head
+  };
+  
+  return root;
+}
+
+let kissing = false;
+function startKissSequence() {
+  const startPos = camera.position.clone();
+  const endPos = new THREE.Vector3(0, 4, 10);
+  const lookAtTarget = new THREE.Vector3(0, 2, -20);
+  const dur = 1500;
+  const startTime = performance.now();
+  
+  function step(now) {
+    const t = Math.min(1, (now - startTime) / dur);
+    const s = t * t * (3 - 2 * t);
+    camera.position.lerpVectors(startPos, endPos, s);
+    camera.lookAt(lookAtTarget);
+    
+    if (t < 1) {
+      requestAnimationFrame(step);
+    } else {
+      kissing = true;
+setTimeout(() => {
+  kissing = false;
+  document.getElementById("textBox").style.display = 'none';
+
+  const finalBox = document.getElementById("finalBox");
+  const finalLove = document.getElementById("finalLove");
+  const finalGift = document.getElementById("finalGift");
+
+  finalBox.style.display = "flex";
+  finalLove.style.display = "flex";   // 👈 AQUÍ aparece la foto + “Te quiero Miriam”
+  finalGift.style.display = "none";
+}, 5200);
+
+    }
+  }
+  
+  requestAnimationFrame(step);
+}
+
+/* ============================================
+   INTERACCIÓN REINO
+   ============================================ */
+function approachObject(targetMesh, distance, onNear) {
+  if (interactionLocked) return;
+  interactionLocked = true;
+  
+  const targetPos = new THREE.Vector3();
+  targetMesh.getWorldPosition(targetPos);
+  
+  const dir = new THREE.Vector3().subVectors(camera.position, targetPos).normalize();
+  const endPos = new THREE.Vector3().addVectors(targetPos, dir.multiplyScalar(distance));
+  
+  const startPos = camera.position.clone();
+  const targetLookAt = targetPos.clone();
+  
+  let t = 0;
+  const duration = 1.2;
+  const startTime = performance.now();
+  
+  function step(now) {
+    const elapsed = (now - startTime) / 1000;
+    t = Math.min(1, elapsed / duration);
+    const s = t * t * (3 - 2 * t);
+    
+    camera.position.lerpVectors(startPos, endPos, s);
+    camera.lookAt(targetLookAt);
+    
+    if (t < 1) {
+      requestAnimationFrame(step);
+    } else {
+      if (typeof onNear === 'function') onNear();
+      setTimeout(() => { interactionLocked = false; }, 400);
+    }
+  }
+  
+  requestAnimationFrame(step);
+}
+
+function onPointerDown(e) {
+  if (interactionLocked || escenaActual !== ESCENAS.REINO) return;
+  
+  pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
+  pointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
+  
+  raycaster.setFromCamera(pointer, camera);
+  const intersects = raycaster.intersectObjects(currentThreeScene.children, true);
+  
+  if (intersects.length > 0) {
+    let obj = intersects[0].object;
+    while (obj && !obj.userData.type) obj = obj.parent;
+    
+    if (!obj || !obj.userData.type) return;
+    
+    if (obj.userData.type === "sun") {
+      approachObject(obj, 8, () => {
+        showMessage("Eres el sol que ilumina mi mayor oscuridad");
+      });
+    } else if (obj.userData.type === "moon") {
+      approachObject(obj, 8, () => {
+        showMessage("Eres lo más hermoso de mi sistema solar");
+      });
+    } else if (obj.userData.type === "earth") {
+      approachObject(obj, 12, () => {
+        sceneObjects.lakePlane.visible = true;
+        sceneObjects.fishGroup.visible = true;
+        showMessage("Has llegado a mi mundo. Presiona 'Entrar al lago' para explorar.");
+        showLakeEnter();
+      });
+    }
+  }
+}
+
+function showLakeEnter() {
+  let existing = document.getElementById("lakeNextBtn");
+  if (existing) return;
+  
+  const btn = document.createElement("button");
+  btn.id = "lakeNextBtn";
+  btn.textContent = "Entrar al lago 🐟";
+  btn.className = "navBtn";
+  btn.style.position = "fixed";
+  btn.style.left = "50%";
+  btn.style.transform = "translateX(-50%)";
+  btn.style.bottom = "40px";
+  btn.style.zIndex = "90";
+  
+  btn.onclick = () => {
+    camera.position.set(0, -6, -6);
+    camera.lookAt(new THREE.Vector3(0, -9.5, -18));
+    showMessage("Bienvenido al lago 🌊", 2500);
+    btn.remove();
+  };
+  
+  document.body.appendChild(btn);
+}
+
+/* ============================================
+   BUCLE DE ANIMACIÓN
+   ============================================ */
+function animate() {
+  requestAnimationFrame(animate);
+  const delta = clock.getDelta();
+  
+  // Rotación de cámara suave (excepto cuando hay interacción bloqueada)
+  if (!interactionLocked && escenaActual !== ESCENAS.CAMINO) {
+    camera.rotation.y += (mouse.x * 0.002) * delta * 60;
+    camera.rotation.x += (mouse.y * 0.001) * delta * 60;
+  }
+  
+  // Animaciones específicas por escena
+  if (escenaActual === ESCENAS.GALAXIA && sceneObjects.stars) {
+    sceneObjects.stars.rotation.y += 0.0003 * delta * 60;
+    sceneObjects.photos?.forEach(p => {
+      p.rotation.y += 0.001 * delta * 60;
+    });
+  }
+  
+  if (escenaActual === ESCENAS.REINO) {
+    if (sceneObjects.sun) sceneObjects.sun.rotation.y += 0.002 * delta * 60;
+    if (sceneObjects.moon) sceneObjects.moon.rotation.y += 0.0015 * delta * 60;
+    if (sceneObjects.earth) sceneObjects.earth.rotation.y += 0.0018 * delta * 60;
+    
+    if (sceneObjects.fishGroup && sceneObjects.fishGroup.visible) {
+      sceneObjects.fishGroup.children.forEach((f, idx) => {
+        f.userData.phase += 0.02 * delta * 60;
+        f.position.x = Math.cos(f.userData.phase + idx) * (3 + Math.sin(f.userData.phase * 0.6));
+        f.position.z = -18 + Math.sin(f.userData.phase * 0.7) * 0.8;
+      });
+    }
+  }
+  
+  if (escenaActual === ESCENAS.CAMINO) {
+    // Balanceo maizales
+    if (sceneObjects.maizeLeft) {
+      sceneObjects.maizeLeft.children.forEach((m, idx) => {
+        m.rotation.z = Math.sin(Date.now() * 0.001 * 1.2 + idx * 0.06) * 0.06;
+        m.position.z = m.userData.baseZ + Math.sin(Date.now() * 0.001 * 0.8 + idx * 0.07) * 0.06;
+      });
+    }
+    
+    if (sceneObjects.maizeRight) {
+      sceneObjects.maizeRight.children.forEach((m, idx) => {
+        m.rotation.z = Math.cos(Date.now() * 0.001 * 1.2 + idx * 0.06) * 0.06;
+        m.position.z = m.userData.baseZ + Math.cos(Date.now() * 0.001 * 0.8 + idx * 0.07) * 0.06;
+      });
+    }
+    
+    // Animación de beso
+    if (kissing && sceneObjects.girl && sceneObjects.boy) {
+      sceneObjects.girl.position.x = THREE.MathUtils.lerp(sceneObjects.girl.position.x, -0.6, 0.008);
+      sceneObjects.boy.position.x = THREE.MathUtils.lerp(sceneObjects.boy.position.x, 0.6, 0.008);
+      
+      sceneObjects.girl.userData.head.rotation.z = Math.sin(Date.now() * 0.001 * 1.4) * 0.02;
+      sceneObjects.boy.userData.head.rotation.z = -Math.sin(Date.now() * 0.001 * 1.4) * 0.02;
+      
+      sceneObjects.girl.userData.leftUpper.rotation.z = THREE.MathUtils.lerp(
+        sceneObjects.girl.userData.leftUpper.rotation.z, -0.25, 0.06
+      );
+      sceneObjects.girl.userData.leftFore.rotation.z = THREE.MathUtils.lerp(
+        sceneObjects.girl.userData.leftFore.rotation.z, -0.6, 0.06
+      );
+      sceneObjects.boy.userData.rightUpper.rotation.z = THREE.MathUtils.lerp(
+        sceneObjects.boy.userData.rightUpper.rotation.z, 0.25, 0.06
+      );
+      sceneObjects.boy.userData.rightFore.rotation.z = THREE.MathUtils.lerp(
+        sceneObjects.boy.userData.rightFore.rotation.z, 0.6, 0.06
+      );
+      
+      sceneObjects.girl.rotation.y = THREE.MathUtils.lerp(sceneObjects.girl.rotation.y, 0.08, 0.02);
+      sceneObjects.boy.rotation.y = THREE.MathUtils.lerp(sceneObjects.boy.rotation.y, -0.08, 0.02);
+    }
+  }
+  
+  renderer.render(currentThreeScene, camera);
+}
+
+/* ============================================
+   INICIALIZACIÓN Y NAVEGACIÓN
+   ============================================ */
+function init() {
+  initThree();
+  
+  // Configurar navegación
+  document.getElementById("toGalaxy").onclick = () => {
+    document.getElementById("lakeNextBtn")?.remove();
+    mountGalaxy();
+  };
+  
+  document.getElementById("toReino").onclick = () => {
+    document.getElementById("lakeNextBtn")?.remove();
+    mountReino();
+    // Agregar listener para clicks en objetos
+    window.addEventListener('pointerdown', onPointerDown);
+  };
+  
+  document.getElementById("toCamino").onclick = () => {
+    document.getElementById("lakeNextBtn")?.remove();
+    // Remover listener de clicks del reino
+    window.removeEventListener('pointerdown', onPointerDown);
+    mountCamino();
+  };
+  
+  // Cargar escena inicial
+  mountGalaxy();
+  
+  // Iniciar animación
+  animate();
+  
+  // Ajuste responsive
+  window.addEventListener("resize", () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+  
+  // Mostrar mensaje inicial
+  setTimeout(() => showMessage("Usa los botones superiores para navegar entre escenas", 4000), 1000);
+}
+
+// Iniciar aplicación cuando el DOM esté listo
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+    
+</script>
+</body>
+</html>

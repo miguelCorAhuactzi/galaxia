@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Nuestra Galaxia ❤️</title>
+
+<style>
+body {
+    margin: 0;
+    overflow: hidden;
+    background: black;
+    font-family: 'Segoe Script', cursive;
+}
+
+canvas { display: block; }
+
+/* TEXTO */
+#texto {
+    position: absolute;
+    top: 20px;
+    width: 100%;
+    text-align: center;
+    color: gold;
+    font-size: 28px;
+    text-shadow: 0 0 10px white;
+    z-index: 5;
+}
+
+/* BOTÓN SIGUIENTE */
+#nextBtn {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    padding: 12px 25px;
+    font-size: 18px;
+    border: none;
+    border-radius: 25px;
+    background: linear-gradient(45deg, #ffb347, #ff416c);
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(255,200,200,0.7);
+    z-index: 6;
+}
+
+/* 🫧 BURBUJA MUSICAL */
+#bubble {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle at top, #ffd1dc, #ff4f81);
+    border-radius: 50%;
+    box-shadow: 0 0 15px rgba(255,150,200,0.9);
+    cursor: pointer;
+    animation: float 3s ease-in-out infinite;
+    z-index: 10;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+/* 🌸 MODAL MUSICAL */
+#modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+}
+
+#modalContent {
+    background: linear-gradient(135deg, #ff7eb3, #ff758c);
+    padding: 25px;
+    border-radius: 25px;
+    text-align: center;
+    box-shadow: 0 0 25px pink;
+    color: white;
+}
+
+.modalBtn {
+    margin: 10px;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 15px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+input[type="range"] {
+    width: 150px;
+}
+</style>
+</head>
+<body>
+
+<div id="texto">Nuestra galaxia infinita 💫</div>
+<button id="nextBtn">Siguiente ✨</button>
+
+<!-- 🫧 BURBUJA -->
+<div id="bubble"></div>
+
+<!-- 🌸 MODAL -->
+<div id="modal">
+  <div id="modalContent">
+      <h2>🎵 Nuestra música</h2>
+      <button class="modalBtn" onclick="play()">▶️ Play</button>
+      <button class="modalBtn" onclick="pause()">⏸️ Pausa</button>
+      <button class="modalBtn" onclick="next()">⏭️ Siguiente</button>
+      <br><br>
+      🔊 Volumen
+      <input type="range" min="0" max="1" step="0.01" onchange="setVol(this.value)">
+      <br><br>
+      <button class="modalBtn" onclick="closeModal()">Cerrar 💖</button>
+  </div>
+</div>
+
+<!-- ✅ THREE CDN -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
+<script>
+/* =========================
+   🎵 PLAYLIST GLOBAL
+========================= */
+let playlist = [
+  "musica/musica1.mp3",
+  "musica/musica2.mp3"
+];
+
+let current = 0;
+let bgMusic = new Audio(playlist[current]);
+bgMusic.loop = false;
+bgMusic.volume = 0.6;
+
+document.body.addEventListener("click", () => {
+  bgMusic.play();
+}, { once:true });
+
+bgMusic.addEventListener("ended", next);
+
+function play() { bgMusic.play(); }
+function pause() { bgMusic.pause(); }
+
+function next() {
+  current = (current + 1) % playlist.length;
+  bgMusic.src = playlist[current];
+  bgMusic.play();
+}
+
+function setVol(v) { bgMusic.volume = v; }
+
+/* =========================
+   🫧 MODAL
+========================= */
+const bubble = document.getElementById("bubble");
+const modal = document.getElementById("modal");
+
+bubble.onclick = () => modal.style.display = "flex";
+function closeModal() { modal.style.display = "none"; }
+
+/* =========================
+   🌌 GALAXIA 3D
+========================= */
+let scene = new THREE.Scene();
+
+let camera = new THREE.PerspectiveCamera(
+  75, window.innerWidth / window.innerHeight, 0.1, 2000
+);
+camera.position.z = 60;
+
+let renderer = new THREE.WebGLRenderer({ antialias:true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+/* CONTROL */
+let controls = { x:0, y:0 };
+document.addEventListener("mousemove", e => {
+  controls.x = (e.clientX / window.innerWidth - 0.5) * 2;
+  controls.y = (e.clientY / window.innerHeight - 0.5) * 2;
+});
+
+/* ESTRELLAS */
+let starGeo = new THREE.BufferGeometry();
+let positions = [];
+
+for(let i=0;i<3000;i++){
+  positions.push(
+    (Math.random()-0.5)*1000,
+    (Math.random()-0.5)*1000,
+    (Math.random()-0.5)*1000
+  );
+}
+
+starGeo.setAttribute("position",
+  new THREE.Float32BufferAttribute(positions,3)
+);
+
+let stars = new THREE.Points(
+  starGeo,
+  new THREE.PointsMaterial({color:0xffffff})
+);
+scene.add(stars);
+
+/* 📸 FOTOS */
+let fotos = [
+  "fotos/foto1.jpg",
+  "fotos/foto2.jpg",
+  "fotos/foto3.jpg"
+];
+
+let loader = new THREE.TextureLoader();
+let photoMeshes = [];
+
+fotos.forEach(src=>{
+  let tex = loader.load(src);
+  let mat = new THREE.MeshBasicMaterial({
+    map: tex,
+    side: THREE.DoubleSide
+  });
+
+  let geo = new THREE.PlaneGeometry(15,15);
+  let mesh = new THREE.Mesh(geo, mat);
+
+  mesh.position.set(
+    (Math.random()-0.5)*200,
+    (Math.random()-0.5)*200,
+    (Math.random()-0.5)*200
+  );
+
+  scene.add(mesh);
+  photoMeshes.push(mesh);
+});
+
+/* ANIMACIÓN */
+function animate(){
+  requestAnimationFrame(animate);
+
+  camera.rotation.y += controls.x * 0.002;
+  camera.rotation.x += controls.y * 0.002;
+
+  photoMeshes.forEach(p => p.rotation.y += 0.002);
+  stars.rotation.y += 0.0004;
+
+  renderer.render(scene,camera);
+}
+
+animate();
+
+/* RESPONSIVE */
+window.addEventListener("resize",()=>{
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+/* BOTÓN SIGUIENTE */
+document.getElementById("nextBtn").onclick = () => {
+  window.location.href = "ecena3.html";
+};
+</script>
+
+</body>
+</html>

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Escena 4 — Camino y Maizales (Caricatura B)</title>
+<style>
+  :root{--accent:#ff6b8a;--gold:#ffd166}
+  body{margin:0;overflow:hidden;font-family:'Segoe Script',cursive;background:linear-gradient(#f7c873,#d9a441);}
+  canvas{display:block}
+  #legend{position:absolute;top:18px;width:100%;text-align:center;color:#fff;font-size:28px;text-shadow:0 0 8px #000;z-index:30}
+  #flowerBtn{position:absolute;inset:0;margin:auto;width:150px;height:150px;border-radius:50%;border:none;
+    background:radial-gradient(circle,pink,crimson);color:#fff;font-size:22px;box-shadow:0 0 30px pink;cursor:pointer;z-index:40;
+    animation:pulse 2000ms infinite}
+  @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.08)}100%{transform:scale(1)}}
+  #textBox{position:absolute;bottom:110px;width:100%;text-align:center;font-size:26px;color:#fff;text-shadow:0 0 10px #000;display:none;z-index:40}
+  #finalBox{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;align-items:center;color:#fff;font-size:38px;text-shadow:0 0 15px #000;z-index:50}
+  #resetBtn{margin-top:20px;padding:12px 30px;border-radius:20px;border:none;background:crimson;color:#fff;cursor:pointer;font-size:18px;box-shadow:0 0 12px rgba(0,0,0,0.3)}
+  /* bubble & modal */
+  #bubble{position:fixed;left:24px;bottom:24px;width:60px;height:60px;border-radius:50%;
+    background:radial-gradient(circle,#ffd1dc,#ff4f81);box-shadow:0 8px 30px rgba(255,80,160,0.35);z-index:55;display:flex;align-items:center;justify-content:center;cursor:pointer}
+  #modal{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:80}
+  #modalCard{background:linear-gradient(135deg,#ff7eb3,#ff758c);padding:18px;border-radius:14px;color:#fff;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,0.6)}
+  .modalBtn{margin:6px;padding:8px 12px;border-radius:10px;border:none;cursor:pointer}
+  #hint{position:absolute;left:16px;bottom:16px;color:#fff;z-index:60;text-shadow:0 0 6px #000}
+    #fotoMiriam{
+    width: 260px;
+    height: 260px;
+    object-fit: cover;
+    border-radius: 20px;
+    box-shadow: 0 0 25px rgba(255,200,200,0.8);
+    margin-bottom: 10px;
+}
+
+</style>
+</head>
+<body>
+  <div id="legend">Nuestra historia ❤️</div>
+  <button id="flowerBtn" aria-label="Flor">🌸</button>
+  <div id="textBox"></div>
+
+  <div id="finalBox">
+    <img id="fotoMiriam" src="fotos/amor.jpg" alt="Foto" />
+
+    <div style="text-align:center;margin-top:15px">
+      Te quiero Miriam ❤️
+    </div>
+
+    <button id="resetBtn">Reiniciar</button>
+</div>
+
+
+  <div id="bubble" title="Abrir música">♪</div>
+  <div id="hint">Haz clic en la flor para continuar</div>
+
+  <div id="modal">
+    <div id="modalCard">
+      <h3>🎵 Nuestra música</h3>
+      <div>
+        <button class="modalBtn" onclick="playBg()">▶️</button>
+        <button class="modalBtn" onclick="pauseBg()">⏸️</button>
+        <button class="modalBtn" onclick="nextBg()">⏭️</button>
+      </div>
+      <div style="margin-top:10px">
+        Volumen <input id="vol" type="range" min="0" max="1" step="0.01">
+      </div>
+      <div style="margin-top:10px;text-align:right">
+        <button class="modalBtn" onclick="closeModal()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
+<script>
+/* ============================
+   MÚSICA GLOBAL (resumible con localStorage)
+   ============================ */
+const PLAYLIST = ["musica/musica1.mp3","musica/musica2.mp3"]; // ajusta tus archivos
+let savedTrack = Number(localStorage.getItem("mi_track_index") || 0);
+let savedTime  = Number(localStorage.getItem("mi_track_time") || 0);
+
+window.bgMusic = window.bgMusic || new Audio(PLAYLIST[savedTrack]);
+window.bgMusic.loop = false;
+window.bgMusic.volume = Number(localStorage.getItem("mi_vol") ?? 0.6);
+window.bgMusic.currentTime = savedTime;
+window._miTrack = savedTrack;
+
+// ensure play on first interaction (browser policy)
+function ensurePlayOnFirstInteraction(){
+  if(!window._firstInteractionSet){
+    document.body.addEventListener("pointerdown", ()=> {
+      try { window.bgMusic.play(); } catch(e){}
+    }, { once:true });
+    window._firstInteractionSet = true;
+  }
+}
+ensurePlayOnFirstInteraction();
+
+window.bgMusic.addEventListener("ended", ()=> {
+  window._miTrack = (window._miTrack + 1) % PLAYLIST.length;
+  window.bgMusic.src = PLAYLIST[window._miTrack];
+  window.bgMusic.play();
+});
+window.bgMusic.addEventListener("timeupdate", ()=> {
+  localStorage.setItem("mi_track_index", window._miTrack);
+  localStorage.setItem("mi_track_time", window.bgMusic.currentTime);
+});
+
+/* modal controls */
+const bubble = document.getElementById("bubble");
+const modal = document.getElementById("modal");
+const volRange = document.getElementById("vol");
+volRange.value = window.bgMusic.volume;
+volRange.oninput = e => { window.bgMusic.volume = Number(e.target.value); localStorage.setItem("mi_vol", window.bgMusic.volume); };
+
+bubble.onclick = ()=> modal.style.display = "flex";
+function closeModal(){ modal.style.display = "none"; }
+function playBg(){ window.bgMusic.play(); }
+function pauseBg(){ window.bgMusic.pause(); }
+function nextBg(){ window._miTrack = (window._miTrack + 1) % PLAYLIST.length; window.bgMusic.src = PLAYLIST[window._miTrack]; window.bgMusic.play(); }
+
+/* ============================
+   THREE.JS base
+   ============================ */
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 3000);
+camera.position.set(0, 6, 24);
+
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+document.body.appendChild(renderer.domElement);
+
+/* Lights */
+const dirLight = new THREE.DirectionalLight(0xffe7b2, 1.1);
+dirLight.position.set(30,40,10);
+scene.add(dirLight);
+scene.add(new THREE.AmbientLight(0xffffff, 0.35));
+const hemi = new THREE.HemisphereLight(0xfff3d9, 0x444444, 0.25);
+scene.add(hemi);
+
+/* Textures */
+const loader = new THREE.TextureLoader();
+const roadTex = loader.load("fotos/tierra.jpg", tex => { tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(1,8); });
+const groundTex = loader.load("img/ground.jpg", tex => { tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(8,8); });
+
+/* Ground & road */
+const ground = new THREE.Mesh(
+  new THREE.PlaneGeometry(500,500),
+  new THREE.MeshStandardMaterial({ map: groundTex })
+);
+ground.rotation.x = -Math.PI/2;
+ground.position.y = -0.01;
+scene.add(ground);
+
+const road = new THREE.Mesh(
+  new THREE.PlaneGeometry(12, 220, 8, 8),
+  new THREE.MeshStandardMaterial({ map: roadTex })
+);
+road.rotation.x = -Math.PI/2;
+road.position.z = -90;
+scene.add(road);
+
+/* Maizales */
+const maizeGroupLeft = new THREE.Group();
+const maizeGroupRight = new THREE.Group();
+scene.add(maizeGroupLeft);
+scene.add(maizeGroupRight);
+
+function createCorn(x,z){
+  const g = new THREE.Group();
+
+  const stemMat = new THREE.MeshStandardMaterial({ color:0x2e8b57, roughness:0.8 });
+  const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.14,0.18,4.6,8), stemMat);
+  stem.position.y = 2.3;
+  g.add(stem);
+
+  // mazorca
+  const cornMat = new THREE.MeshStandardMaterial({ color:0xf1c40f, roughness:0.6 });
+  const corn = new THREE.Mesh(new THREE.CylinderGeometry(0.22,0.28,1.4,10), cornMat);
+  corn.position.set(0.5,2.6,0);
+  corn.rotation.z = Math.PI/2.8;
+  g.add(corn);
+
+  // hojas (curvadas con vertices manipulados)
+  for(let i=0;i<3;i++){
+    const leafGeom = new THREE.PlaneGeometry(1.6,3.0,6,6);
+    const pos = leafGeom.attributes.position;
+    for(let v=0; v<pos.count; v++){
+      const vy = pos.getY(v);
+      const vx = pos.getX(v);
+      pos.setX(v, vx + Math.sin(vy*0.7 + Math.random()*0.6)*0.03);
+      pos.setZ(v, (Math.cos(vy*0.6)+1)*0.03);
+    }
+    pos.needsUpdate = true;
+    const leaf = new THREE.Mesh(leafGeom, new THREE.MeshStandardMaterial({ color:0x2aa05a, side:THREE.DoubleSide, roughness:0.9 }));
+    leaf.position.y = 2 - i*0.3;
+    leaf.rotation.y = Math.random()*Math.PI;
+    leaf.rotation.z = -0.3 + Math.random()*0.6;
+    leaf.scale.x = 0.9 + Math.random()*0.4;
+    g.add(leaf);
+  }
+
+  g.position.set(x + (Math.random()-0.5)*0.6, 0, z + (Math.random()-0.5)*0.6);
+  g.userData.baseZ = g.position.z;
+  return g;
+}
+
+for(let i=0;i<120;i++){
+  maizeGroupLeft.add(createCorn(-9, -i*1.6));
+  maizeGroupRight.add(createCorn(9, -i*1.6 + (Math.random()*0.4)));
+}
+
+/* ============================
+   PERSONAJES (B - caricatura 3D más completa)
+   - estructura articulada simple (torso, pelvis, brazos con dos segmentos)
+   ============================ */
+function createCharacter(options){
+  const { shirtColor=0x000000, torsoHeight=2.6, legHeight=2.4, x=0, hat=true } = options;
+  const root = new THREE.Group();
+
+  // pelvis (small)
+  const pelvis = new THREE.Mesh(new THREE.CylinderGeometry(0.7,0.8,0.6,12), new THREE.MeshStandardMaterial({ color:0x8b5a3c }));
+  pelvis.position.y = 0.6;
+  root.add(pelvis);
+
+  // torso
+  const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.9,1.1,torsoHeight,16), new THREE.MeshStandardMaterial({ color: shirtColor }));
+  torso.position.y = pelvis.position.y + 0.5 + torsoHeight/2 - 0.3;
+  root.add(torso);
+
+  // neck & head
+  const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.18,0.18,0.3,12), new THREE.MeshStandardMaterial({ color:0xffdbac }));
+  neck.position.y = torso.position.y + torsoHeight/2 + 0.15;
+  root.add(neck);
+
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.6,20,20), new THREE.MeshStandardMaterial({ color:0xffdbac }));
+  head.position.y = neck.position.y + 0.5;
+  root.add(head);
+
+  // legs (left & right)
+  const legMat = new THREE.MeshStandardMaterial({ color:0x2e2e2e });
+  const leftLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.28,0.35,legHeight,12), legMat);
+  const rightLeg = leftLeg.clone();
+  leftLeg.position.set(-0.28, 0.6 - legHeight/2 + 0.2, 0);
+  rightLeg.position.set(0.28, 0.6 - legHeight/2 + 0.2, 0);
+  root.add(leftLeg); root.add(rightLeg);
+
+  // arms: upper + forearm
+  const upperArmGeom = new THREE.CylinderGeometry(0.18,0.2,torsoHeight*0.6,10);
+  const foreArmGeom = new THREE.CylinderGeometry(0.16,0.16,torsoHeight*0.55,10);
+  const armMat = new THREE.MeshStandardMaterial({ color: shirtColor });
+
+  // left
+  const leftUpper = new THREE.Mesh(upperArmGeom, armMat);
+  leftUpper.position.set(-1.05, torso.position.y + torsoHeight*0.12, 0);
+  leftUpper.rotation.z = Math.PI/6;
+  root.add(leftUpper);
+
+  const leftFore = new THREE.Mesh(foreArmGeom, armMat);
+  leftFore.position.set(-1.55, torso.position.y - 0.05, 0);
+  leftFore.rotation.z = Math.PI/4;
+  root.add(leftFore);
+
+  // right
+  const rightUpper = leftUpper.clone();
+  const rightFore = leftFore.clone();
+  rightUpper.position.x = 1.05; rightUpper.rotation.z = -Math.PI/6;
+  rightFore.position.x = 1.55; rightFore.rotation.z = -Math.PI/4;
+  root.add(rightUpper); root.add(rightFore);
+
+  // simple hands
+  const handMat = new THREE.MeshStandardMaterial({ color:0xffdbac });
+  const lh = new THREE.Mesh(new THREE.SphereGeometry(0.14,10,10), handMat);
+  const rh = lh.clone();
+  lh.position.set(-1.85, torso.position.y - 0.25, 0);
+  rh.position.set(1.85, torso.position.y - 0.25, 0);
+  root.add(lh); root.add(rh);
+
+  // vest / overlay (light)
+  const vest = new THREE.Mesh(new THREE.CylinderGeometry(0.95,1.05,torsoHeight,12), new THREE.MeshStandardMaterial({ color:0xefe6d1, transparent:true, opacity:0.95 }));
+  vest.position.y = torso.position.y;
+  vest.scale.x = 0.98; vest.scale.z = 0.98;
+  root.add(vest);
+
+  // hat
+  if(hat){
+    const brim = new THREE.Mesh(new THREE.CylinderGeometry(0.95,0.95,0.08,18), new THREE.MeshStandardMaterial({ color:0xefe6d1 }));
+    brim.position.y = head.position.y + 0.75;
+    const crown = new THREE.Mesh(new THREE.CylinderGeometry(0.45,0.45,0.9,12), new THREE.MeshStandardMaterial({ color:0xefe6d1 }));
+    crown.position.y = head.position.y + 1.1;
+    root.add(brim); root.add(crown);
+  }
+
+  // position root
+  root.position.set(x, 0, -20);
+  // store references for animation
+  root.userData = {
+    leftUpper, leftFore, rightUpper, rightFore, lh, rh, torso, head
+  };
+  return root;
+}
+
+// create characters
+const girl = createCharacter({ shirtColor: 0x7a2f7a, torsoHeight:2.6, legHeight:2.8, x:-2.6, hat:true });
+const boy  = createCharacter({ shirtColor: 0x1a1a1a, torsoHeight:3.1, legHeight:3.2, x:2.6, hat:true });
+
+scene.add(girl);
+scene.add(boy);
+
+/* ============================
+   Interacciones y secuencia
+   ============================ */
+const flowerBtn = document.getElementById("flowerBtn");
+const textBox = document.getElementById("textBox");
+const finalBox = document.getElementById("finalBox");
+const resetBtn = document.getElementById("resetBtn");
+let kissing = false;
+
+flowerBtn.onclick = () => {
+  flowerBtn.style.display = 'none';
+  document.getElementById("hint").style.display = 'none';
+  textBox.style.display = 'block';
+  textBox.innerText = "Quisiera revivir nuestro primer beso...";
+  setTimeout(()=> startKissSequence(), 1200);
+};
+
+function startKissSequence(){
+  // camera approach
+  const startPos = camera.position.clone();
+  const endPos = new THREE.Vector3(0, 4, 10);
+  const lookAtTarget = new THREE.Vector3(0,2,-20);
+  const dur = 1500;
+  const startTime = performance.now();
+  function step(now){
+    const t = Math.min(1, (now - startTime)/dur);
+    const s = t*t*(3-2*t);
+    camera.position.lerpVectors(startPos, endPos, s);
+    camera.lookAt(lookAtTarget);
+    if(t < 1) requestAnimationFrame(step);
+    else {
+      // start kiss animation
+      kissing = true;
+      // animate arms moving to hug
+      setTimeout(()=> {
+        kissing = false;
+        textBox.style.display = 'none';
+        finalBox.style.display = 'flex';
+      }, 5200);
+    }
+  }
+  requestAnimationFrame(step);
+}
+
+/* reset to escena2 */
+resetBtn.onclick = ()=> {
+  localStorage.setItem("mi_track_time", window.bgMusic.currentTime);
+  localStorage.setItem("mi_track_index", window._miTrack ?? 0);
+  window.location.href = "escena2.html";
+};
+
+/* ============================
+   Animation loop
+   ============================ */
+const clock = new THREE.Clock();
+
+function animate(){
+  requestAnimationFrame(animate);
+  const time = Date.now() * 0.001;
+
+  // maizales sway
+  maizeGroupLeft.children.forEach((m, idx) => {
+    m.rotation.z = Math.sin(time*1.2 + idx*0.06) * 0.06;
+    m.position.z = m.userData.baseZ + Math.sin(time*0.8 + idx*0.07)*0.06;
+  });
+  maizeGroupRight.children.forEach((m, idx) => {
+    m.rotation.z = Math.cos(time*1.2 + idx*0.06) * 0.06;
+    m.position.z = m.userData.baseZ + Math.cos(time*0.8 + idx*0.07)*0.06;
+  });
+
+  // kissing animation: bodies approach and arms move to hug
+  if(kissing){
+    // approach positions
+    girl.position.x = THREE.MathUtils.lerp(girl.position.x, -0.6, 0.008);
+    boy.position.x  = THREE.MathUtils.lerp(boy.position.x, 0.6, 0.008);
+
+    // head tilt slightly
+    girl.userData.head.rotation.z = Math.sin(time*1.4)*0.02;
+    boy.userData.head.rotation.z = -Math.sin(time*1.4)*0.02;
+
+    // arms animate to hug pose
+    const gripL = Math.min(1, (Math.sin(time*2)+1)/2);
+    const gripR = gripL;
+
+    // left upper rotate toward center
+    girl.userData.leftUpper.rotation.z = THREE.MathUtils.lerp(girl.userData.leftUpper.rotation.z, -0.25, 0.06);
+    girl.userData.leftFore.rotation.z = THREE.MathUtils.lerp(girl.userData.leftFore.rotation.z, -0.6, 0.06);
+    boy.userData.rightUpper.rotation.z = THREE.MathUtils.lerp(boy.userData.rightUpper.rotation.z, 0.25, 0.06);
+    boy.userData.rightFore.rotation.z = THREE.MathUtils.lerp(boy.userData.rightFore.rotation.z, 0.6, 0.06);
+
+    // slight body rotation
+    girl.rotation.y = THREE.MathUtils.lerp(girl.rotation.y, 0.08, 0.02);
+    boy.rotation.y  = THREE.MathUtils.lerp(boy.rotation.y, -0.08, 0.02);
+
+  } else {
+    // relax arms to default
+    girl.userData.leftUpper.rotation.z = THREE.MathUtils.lerp(girl.userData.leftUpper.rotation.z, Math.PI/6, 0.02);
+    girl.userData.leftFore.rotation.z  = THREE.MathUtils.lerp(girl.userData.leftFore.rotation.z, Math.PI/4, 0.02);
+    girl.rotation.y = THREE.MathUtils.lerp(girl.rotation.y, 0, 0.02);
+
+    boy.userData.rightUpper.rotation.z = THREE.MathUtils.lerp(boy.userData.rightUpper.rotation.z, -Math.PI/6, 0.02);
+    boy.userData.rightFore.rotation.z  = THREE.MathUtils.lerp(boy.userData.rightFore.rotation.z, -Math.PI/4, 0.02);
+    boy.rotation.y = THREE.MathUtils.lerp(boy.rotation.y, 0, 0.02);
+  }
+
+  renderer.render(scene, camera);
+}
+animate();
+
+/* responsive */
+window.addEventListener("resize", ()=> {
+  camera.aspect = innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+</script>
+</body>
+</html>
